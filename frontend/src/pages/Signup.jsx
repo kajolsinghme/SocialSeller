@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { signup } from "../services/auth.service";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -7,17 +8,34 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    console.log(formData)
+    console.log(formData);
 
-    
+    try {
+      setLoading(true);
+      setError("");
+      setSuccess("");
+
+      await signup(formData);
+      setSuccess("Account created successfully");
+
+      setFormData({ name: "", email: "", password: "" });
+    } catch (error) {
+      console.log(error);
+      setError(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,10 +51,23 @@ const Signup = () => {
         </h1>
       </div>
       <div className="w-full max-w-sm rounded-xl bg-white p-6 border border-gray-300 shadow-2xl">
-        <h1 className="font-semibold text-lg">Welcome back</h1>
+        <h1 className="font-semibold text-lg">Create your account</h1>
         <p className="text-sm mb-4 text-gray-500">
           Sign up to start managing your orders
         </p>
+
+        {error && (
+          <p className="text-sm text-red-500 mb-3">
+            {error}
+          </p>
+        )}
+
+        {success && (
+          <p className="text-sm text-green-600 mb-3">
+            {success}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="mb-1 font-medium block text-sm">Name</label>
@@ -46,37 +77,41 @@ const Signup = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="John Doe"
+              required
               className="w-full border border-gray-400 px-4 py-2 bg-gray-50 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-sm "
             />
           </div>
           <div>
             <label className="mb-1 font-medium block text-sm">Email</label>
             <input
-              type="text"
+              type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
+              required
               className="w-full border border-gray-400 px-4 py-2 bg-gray-50 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-sm "
             />
           </div>
           <div>
             <label className="mb-1 font-medium block text-sm">Password</label>
             <input
-              type="text"
+              type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
+              required
               className="w-full border border-gray-400 px-4 py-2 bg-gray-50 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-sm "
             />
           </div>
 
           <button
             type="submit"
+            disabled={loading}
             className="bg-indigo-600 w-full p-2 rounded-lg text-sm text-white cursor-pointer hover:bg-indigo-700"
           >
-            Sign up
+            {loading ? "Creating account..." : "Sign up"}
           </button>
         </form>
 
