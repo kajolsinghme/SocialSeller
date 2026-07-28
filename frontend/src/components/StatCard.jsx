@@ -1,10 +1,10 @@
-const StatCard = ({title, value, description, icon}) => {
+const StatCard = ({title, value, description, icon, backgroundColor}) => {
   return (
     <div className="w-full bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-sm text-gray-600">{title}</h2>
 
-        <div className="p-2 rounded-lg bg-purple-50">
+        <div className={`p-2 rounded-lg bg-${backgroundColor}-50`}>
           {icon}
         </div>
       </div>

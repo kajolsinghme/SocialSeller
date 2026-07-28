@@ -46,24 +46,28 @@ const Dashboard = () => {
               value="248"
               description="All time orders received"
               icon={<ShoppingBag size={16} color="indigo" />}
+              backgroundColor="purple"
             />
             <StatCard
               title="Total Returns"
               value="12"
               description="Items returned by customers"
               icon={<RotateCcw size={16} color="red" />}
+              backgroundColor="red"
             />
             <StatCard
               title="Total Exchanges"
               value="7"
               description="Items exchanged by customers"
               icon={<RefreshCcw size={16} color="blue" />}
+              backgroundColor="blue"
             />
             <StatCard
               title="Total Income"
               value="1,24,500"
               description="Revenue earned so far"
               icon={<IndianRupee size={16} color="green" />}
+              backgroundColor="green"
             />
           </div>
           <OrdersTable />
