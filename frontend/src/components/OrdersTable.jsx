@@ -1,5 +1,5 @@
 import { SearchIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 const fakeOrders = [
   {
@@ -47,6 +47,7 @@ const fakeOrders = [
 const OrdersTable = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -58,26 +59,39 @@ const OrdersTable = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const query = search.trim().toLowerCase();
+  const filteredOrders = useMemo(() => {
+    return orders.filter(
+      (order) =>
+        order.customerName.toLowerCase().includes(query) ||
+        order.product.toLowerCase().includes(query),
+    );
+  }, [orders, search]);
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
       <div className="flex justify-between p-6">
         <div>
           <h1 className="font-semibold">Recent Orders</h1>
-          <p className="text-gray-600 text-xs">5 total orders</p>
+          <p className="text-gray-600 text-xs">{orders.length} total orders</p>
         </div>
         <div className="flex justify-start items-center gap-2 bg-gray-100 rounded-xl pl-3">
           <SearchIcon size={16} color="gray" />
           <input
             className=" placeholder:text-sm w-72 outline-none"
             type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search orders..."
           />
         </div>
       </div>
       <div>
         {loading && <p className="p-6">Loading...</p>}
-        {!loading && orders.length === 0 && <p className="p-6">No orders</p>}
-        {!loading && orders.length > 0 && (
+        {!loading && filteredOrders.length === 0 && (
+          <p className="p-6">No orders</p>
+        )}
+        {!loading && filteredOrders.length > 0 && (
           <table className="w-full">
             <thead>
               <tr className="text-left bg-gray-50 border border-gray-200">
@@ -100,7 +114,7 @@ const OrdersTable = () => {
             </thead>
 
             <tbody>
-              {orders.map((order) => (
+              {filteredOrders.map((order) => (
                 <tr key={order.id} className="border border-gray-200">
                   <td className="px-6 py-4 text-sm">{order.customerName}</td>
                   <td className="px-6 py-4 text-gray-500 text-sm">
