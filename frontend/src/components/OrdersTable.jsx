@@ -1,7 +1,11 @@
 import { SearchIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const OrdersTable = () => {
-  const orders = [
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fakeOrders = [
     {
       id: 1,
       customerName: "Rahul Sharma",
@@ -43,6 +47,16 @@ const OrdersTable = () => {
       status: "Ordered",
     },
   ];
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setOrders(fakeOrders);
+      setLoading(false);
+    }, 700);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
@@ -86,11 +100,17 @@ const OrdersTable = () => {
             {orders.map((order) => (
               <tr key={order.id} className="border border-gray-200">
                 <td className="px-6 py-4 text-sm">{order.customerName}</td>
-                <td className="px-6 py-4 text-gray-500 text-sm">{order.product}</td>
+                <td className="px-6 py-4 text-gray-500 text-sm">
+                  {order.product}
+                </td>
 
-                <td className="px-6 py-4 text-sm font-medium">{order.amount}</td>
+                <td className="px-6 py-4 text-sm font-medium">
+                  {order.amount}
+                </td>
 
-                <td className="px-6 py-4 text-xs text-gray-600">{order.date}</td>
+                <td className="px-6 py-4 text-xs text-gray-600">
+                  {order.date}
+                </td>
 
                 <td>
                   <span

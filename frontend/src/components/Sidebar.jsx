@@ -2,7 +2,7 @@ import { LayoutDashboard, ShoppingBag, LogOut } from "lucide-react";
 
 const Sidebar = () => {
   return (
-    <div className="bg-white flex flex-col border-r border-gray-200 w-56">
+    <div className="bg-white flex flex-col border-r border-gray-200 w-56 min-h-screen">
       <div className="p-5 flex  gap-2 items-center border-b border-gray-200">
         <img src="./social_seller_logo.png" alt="" className="w-6 h-6 rounded-full" />
         <h1 className="text-md font-bold">Social Seller</h1>
