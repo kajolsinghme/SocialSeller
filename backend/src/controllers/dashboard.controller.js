@@ -5,7 +5,7 @@ export const getDashboardStats = async (req, res) => {
   try {
     const sellerId = req.user.id;
     const sellerObjectId = new mongoose.Types.ObjectId(sellerId);
-    
+
     const now = new Date();
 
     const thirtyDaysAgo = new Date();
@@ -44,6 +44,7 @@ export const getDashboardStats = async (req, res) => {
       {
         $match: {
           seller: sellerObjectId,
+          status: { $ne: "returned" },
         },
       },
       {
@@ -59,6 +60,7 @@ export const getDashboardStats = async (req, res) => {
       {
         $match: {
           seller: sellerObjectId,
+          status: { $ne: "returned" },
           orderDate: { $lte: now, $gte: thirtyDaysAgo },
         },
       },
@@ -98,18 +100,3 @@ export const getDashboardStats = async (req, res) => {
     });
   }
 };
-
-// const dashboardData = {
-//   overall: {
-//     orders: 248,
-//     returns: 12,
-//     exchanges: 7,
-//     income: "1,24,500",
-//   },
-//   last30: {
-//     orders: 42,
-//     returns: 3,
-//     exchanges: 1,
-//     income: "28,900",
-//   },
-// };
