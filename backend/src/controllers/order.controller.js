@@ -1,11 +1,12 @@
-import Order from "../models/order.model";
+import Order from "../models/order.model.js";
 
 export const createOrder = async (req, res) => {
   try {
+    const existingOrder = await Order.findOne({})
     const order = await Order.create({ ...req.body, seller: req.user.id });
 
     return res
-      .staus(201)
+      .status(201)
       .json({ success: true, message: "Order created successfully", order });
   } catch (error) {
     console.log(error);
@@ -34,3 +35,4 @@ export const getOrders = async(req,res)=>{
     });
   }
 }
+

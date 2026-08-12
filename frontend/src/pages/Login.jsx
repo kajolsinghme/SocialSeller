@@ -12,7 +12,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -28,14 +28,14 @@ const Login = () => {
       setError("");
       setSuccess("");
 
-      await login(formData);
-      // console.log(response.data)
+      const response = await login(formData);
+      localStorage.setItem("token", response.data.token);
+
       setSuccess("Logged in successfully");
 
       setFormData({ email: "", password: "" });
 
-      navigate("/dashboard")
-      
+      navigate("/");
     } catch (error) {
       console.log(error);
       setError(error.response?.data?.message || "Something went wrong");
@@ -97,7 +97,7 @@ const Login = () => {
             disabled={loading}
             className="bg-indigo-600 w-full p-2 rounded-lg text-sm text-white cursor-pointer hover:bg-indigo-700"
           >
-            {loading ? "Signing in...": "Sign in"}
+            {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
