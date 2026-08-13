@@ -56,6 +56,7 @@ export const getDashboardStats = async (req, res) => {
         },
       },
     ]);
+    
     const last30Income = await Order.aggregate([
       {
         $match: {
