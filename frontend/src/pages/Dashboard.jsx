@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 import { getDashboardStats } from "../services/dashboard.service.js";
 
 const Dashboard = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [filter, setFilter] = useState("overall");
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
 
   useEffect(() => {
     setLoading(true);
@@ -19,16 +19,15 @@ const Dashboard = () => {
     const fetchDashboardStats = async () => {
       try {
         const token = localStorage.getItem("token");
-        
+
         const response = await getDashboardStats(token);
 
         setStats(response.data.stats[filter]);
       } catch (error) {
         console.log(error);
         setError(error.response?.data?.message || "Failed to load dashboard");
-      }
-      finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -37,9 +36,9 @@ const Dashboard = () => {
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       <div className="flex-1">
-        <Navbar />
+        <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
         <div className="p-6 bg-gray-50">
           <h1 className="text-xl font-bold">Dashboard</h1>
           <p className="text-gray-500 mt-1 mb-4 text-sm">
