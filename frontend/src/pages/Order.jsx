@@ -6,6 +6,8 @@ import OrderModal from "../components/OrderModal";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("all");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
@@ -21,6 +23,19 @@ const Order = () => {
     };
     fetchOrders();
   }, []);
+
+  const searchTerm = search.toLowerCase();
+
+  const filteredOrders = orders.filter((order) => {
+    const searchMatches =
+      order.customerName.toLowerCase().includes(searchTerm) ||
+      order.productName.toLowerCase().includes(searchTerm);
+    const statusMatches =
+      status === "all" || order.status.toLowerCase() === status;
+
+    return searchMatches && statusMatches;
+  });
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -39,9 +54,13 @@ const Order = () => {
             <input
               type="text"
               placeholder="Search orders..."
+              onChange={(e) => setSearch(e.target.value)}
               className="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <select className="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none">
+            <select
+              className="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none"
+              onChange={(e) => setStatus(e.target.value)}
+            >
               <option value="all">All Status</option>
               <option value="ordered">Ordered</option>
               <option value="returned">Returned</option>
@@ -70,7 +89,7 @@ const Order = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
+                {filteredOrders.map((order) => (
                   <tr key={order._id} className="border-b border-gray-100">
                     <td className="px-4 py-3">{order.customerName}</td>
                     <td className="px-4 py-3">{order.productName}</td>
