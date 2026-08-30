@@ -122,7 +122,11 @@ const Order = () => {
 
                     <td className="px-4 py-3 capitalize">{order.status}</td>
                     <td className="px-4 py-3">
-                      {new Date(order.orderDate).toLocaleDateString()}
+                      {new Date(order.orderDate).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                      })}
                     </td>
                     <td className="px-4 py-3 relative">
                       <button
@@ -169,7 +173,13 @@ const Order = () => {
         </main>
 
         {isCreateModalOpen && (
-          <OrderModal onClose={() => setIsCreateModalOpen(false)} />
+          <OrderModal
+            onClose={() => setIsCreateModalOpen(false)}
+            onOrderCreated={(newOrder) => {
+              setOrders((prevOrders) => [newOrder, ...prevOrders]);
+              setIsCreateModalOpen(false);
+            }}
+          />
         )}
       </div>
     </div>
