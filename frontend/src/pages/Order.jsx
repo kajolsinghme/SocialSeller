@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import { getOrders } from "../services/order.service";
+import { deleteOrder, getOrders } from "../services/order.service";
 import OrderModal from "../components/OrderModal";
+import { MoreVertical } from "lucide-react";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
+  const [openMenu, setOpenMenu] = useState(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -35,6 +37,27 @@ const Order = () => {
 
     return searchMatches && statusMatches;
   });
+
+  const handleDelete = async (orderId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this order?",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      await deleteOrder(token, orderId);
+
+      setOrders((prevOrders) =>
+        prevOrders.filter((order) => order._id !== orderId),
+      );
+
+      setOpenMenu(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -75,7 +98,7 @@ const Order = () => {
             </button>
           </div>
 
-          <div className="bg-white border border-gray-200 mt-6 rounded-xl overflow-hidden">
+          <div className="bg-white border border-gray-200 mt-6 rounded-xl ">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
@@ -86,6 +109,7 @@ const Order = () => {
                   <th className="text-left px-4 py-3 font-semibold">Amount</th>
                   <th className="text-left px-4 py-3 font-semibold">Status</th>
                   <th className="text-left px-4 py-3 font-semibold">Date</th>
+                  <th className="text-left px-4 py-3 font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,6 +123,43 @@ const Order = () => {
                     <td className="px-4 py-3 capitalize">{order.status}</td>
                     <td className="px-4 py-3">
                       {new Date(order.orderDate).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 relative">
+                      <button
+                        className="p-1 rounded hover:bg-gray-100 cursor-pointer"
+                        onClick={() =>
+                          setOpenMenu(openMenu === order._id ? null : order._id)
+                        }
+                      >
+                        <MoreVertical size={18} />
+                      </button>
+
+                      {openMenu === order._id && (
+                        <div className="absolute right-4 top-10 bg-white border border-gray-200 rounded-lg w-32 z-10">
+                          <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
+                            Edit
+                          </button>
+
+                          {order.status === "ordered" && (
+                            <>
+                              <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
+                                Return
+                              </button>
+
+                              <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50">
+                                Exchange
+                              </button>
+                            </>
+                          )}
+
+                          <button
+                            onClick={() => handleDelete(order._id)}
+                            className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-50"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}

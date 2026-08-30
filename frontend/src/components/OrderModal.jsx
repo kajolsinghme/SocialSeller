@@ -66,14 +66,14 @@ const OrderModal = ({ onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm border rounded-lg"
+              className="px-4 py-2 text-sm border rounded-lg cursor-pointer"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg"
+              className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg cursor-pointer"
             >
               Create Order
             </button>

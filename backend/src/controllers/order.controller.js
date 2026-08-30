@@ -36,3 +36,29 @@ export const getOrders = async(req,res)=>{
   }
 }
 
+export const deleteOrder = async (req, res) => {
+  try {
+    const {id} = req.params
+
+    const order = await Order.findById(id)
+
+    if(!order){
+      return res
+      .status(404)
+      .json({ success: false, message: "Order not found" });
+    }
+
+    await Order.findByIdAndDelete(id)
+
+    return res
+      .status(201)
+      .json({ success: true, message: "Order deleted successfully" });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};

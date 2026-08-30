@@ -11,3 +11,12 @@ export const getOrders = (token) => {
     },
   });
 };
+
+
+export const deleteOrder = (token, orderId) => {
+  return API.delete(`/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
